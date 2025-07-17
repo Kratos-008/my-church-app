@@ -1,9 +1,10 @@
 // next.config.js
-const path = require('path');
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'standalone', // ✅ required for dynamic SSR pages
+  experimental: {
+    serverActions: true // or other features you're using
+  }
+}
 
-module.exports = {
-  webpack: (config) => {
-    config.resolve.alias['@'] = path.resolve(__dirname);
-    return config;
-  },
-};
+module.exports = nextConfig
