@@ -1,51 +1,25 @@
-'use server'
+// app/events/page.tsx
+'use client'
 
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth.config'
+import { getAllEvents } from '@/lib/events'
 
-const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+export default async function EventsPage() {
+  const events = await getAllEvents()
 
-export async function getAllEvents() {
-  const session = await getServerSession(authOptions)
-
-  if (!session || session.user.role !== 'ADMIN') {
-    throw new Error('Not authorized')
-  }
-
-  const res = await fetch(`${baseUrl}/api/admin/events`, {
-    method: 'GET',
-    cache: 'no-store',
-  })
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch events')
-  }
-
-  return res.json()
-}
-
-export async function createEvent(data: {
-  title: string
-  description: string
-  date: string
-  location: string
-}) {
-  const session = await getServerSession(authOptions)
-
-  if (!session || session.user.role !== 'ADMIN') {
-    throw new Error('Not authorized')
-  }
-
-  const res = await fetch(`${baseUrl}/api/admin/events`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-    cache: 'no-store',
-  })
-
-  if (!res.ok) {
-    throw new Error('Failed to create event')
-  }
-
-  return res.json()
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Upcoming Events</h1>
+      <ul className="space-y-2">
+        {events.map((event: any) => (
+          <li key={event.id} className="bg-white p-4 rounded shadow">
+            <h2 className="text-lg font-semibold">{event.title}</h2>
+            <p>{event.description}</p>
+            <p className="text-sm text-gray-500">
+              📍 {event.location} | 📅 {new Date(event.date).toLocaleDateString()}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
