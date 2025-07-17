@@ -1,10 +1,10 @@
 // app/events/page.tsx
 'use client'
 
-import { getAllEvents } from '@/lib/events'
+import { getAllEventsPublic } from '@/lib/public-events'
 
 export default async function EventsPage() {
-  const events = await getAllEvents()
+  const events = await getAllEventsPublic()
 
   return (
     <div className="p-4">
