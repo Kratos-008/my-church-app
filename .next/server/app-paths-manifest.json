@@ -1,6 +1,19 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/events/page": "app/admin/events/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/users/page": "app/admin/users/page.js",
+  "/api/admin/events/delete/route": "app/api/admin/events/delete/route.js",
+  "/api/admin/events/edit/route": "app/api/admin/events/edit/route.js",
+  "/api/admin/events/route": "app/api/admin/events/route.js",
+  "/api/admin/users/delete/route": "app/api/admin/users/delete/route.js",
+  "/api/admin/users/edit/route": "app/api/admin/users/edit/route.js",
+  "/api/auth/register/route": "app/api/auth/register/route.js",
+  "/contact/page": "app/contact/page.js",
+  "/events/page": "app/events/page.js",
   "/page": "app/page.js",
   "/prayer/page": "app/prayer/page.js",
-  "/events/page": "app/events/page.js",
-  "/contact/page": "app/contact/page.js"
+  "/services/page": "app/services/page.js",
+  "/youth/page": "app/youth/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
 }

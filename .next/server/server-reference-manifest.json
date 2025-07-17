@@ -1,5 +1,1 @@
-{
-  "node": {},
-  "edge": {},
-  "encryptionKey": "NLv30FWmtmnBsUNJVTML9C1nuhHhS51/51DvaoqC8D8="
-}
+{"node":{"c7f75ac81e80dcb83a0b3c19b355d00ab8a4e049":{"workers":{"app/events/page":"13191"},"layer":{"app/events/page":"rsc"}},"f7622e5a348d7a791ffe88588e7cc8c495ba779e":{"workers":{"app/events/page":"13191"},"layer":{"app/events/page":"rsc"}},"25913bf1ecb1847d7b51c6f6e0992a3bc8c548f4":{"workers":{"app/admin/events/page":"49679"},"layer":{"app/admin/events/page":"action-browser"}},"a4dacb09a337d49fd6d48659f1abd63a3fbe70c0":{"workers":{"app/admin/events/page":"49679"},"layer":{"app/admin/events/page":"action-browser"}},"b120ee610f514b41c43115cc4164ff6f4947640d":{"workers":{"app/admin/events/page":"49679"},"layer":{"app/admin/events/page":"action-browser"}},"c9bce9e16447166fca767452c1a607809140114f":{"workers":{"app/admin/events/page":"49679"},"layer":{"app/admin/events/page":"action-browser"}}},"edge":{},"encryptionKey":"svsKzRpfsxuErdLNuDMgxcETiecSDe4caI1NfxyphLo="}

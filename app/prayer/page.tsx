@@ -3,7 +3,7 @@
 import { ChevronLeft, CheckCircle2, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
-import { HeartHandshake } from '@/components/icons/HeartHandshake'; // ✅ custom SVG component
+import { HeartHandshake } from '../components/icons/HeartHandshake'; // ✅ custom SVG component
 
 export default function PrayerPage() {
   const [tab, setTab] = useState<'submit' | 'current' | 'answered'>('submit');
