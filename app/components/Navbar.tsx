@@ -27,7 +27,6 @@ export default function Navbar() {
             <CalendarDays className="h-4 w-4" />
             Events
           </Link>
-
           <Link href="/services" className="hover:underline">Services</Link>
           <Link href="/youth" className="hover:underline">Youth</Link>
           <Link href="/prayer" className="hover:underline">Prayer</Link>
