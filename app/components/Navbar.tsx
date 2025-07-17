@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Heart } from 'lucide-react'
+import { Heart, CalendarDays } from 'lucide-react'
 
 export default function Navbar() {
   return (
@@ -20,9 +20,14 @@ export default function Navbar() {
         </div>
 
         {/* Navigation */}
-        <nav className="space-x-4 text-sm hidden md:block">
+        <nav className="space-x-4 text-sm hidden md:flex items-center">
           <Link href="/" className="hover:underline">Home</Link>
-          <Link href="/events" className="hover:underline">Events</Link>
+          
+          <Link href="/events" className="flex items-center gap-1 hover:text-primary">
+            <CalendarDays className="h-4 w-4" />
+            Events
+          </Link>
+
           <Link href="/services" className="hover:underline">Services</Link>
           <Link href="/youth" className="hover:underline">Youth</Link>
           <Link href="/prayer" className="hover:underline">Prayer</Link>
