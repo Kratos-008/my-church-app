@@ -1,6 +1,6 @@
-
 import '../styles/globals.css'
 import type { Metadata } from 'next'
+import { Providers } from './providers' // 👈 make sure this path is correct
 
 export const metadata: Metadata = {
   title: 'Masbate Good News Baptist Church',
@@ -10,7 +10,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers> {/* ✅ Wrap all app content in SessionProvider */}
+      </body>
     </html>
   )
 }

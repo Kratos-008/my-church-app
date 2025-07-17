@@ -2,7 +2,7 @@
 'use server'
 
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth.config'
+import { authOptions } from '@/lib/auth'
 
 const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
 
