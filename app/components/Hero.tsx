@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Hero() {
   return (
     <section className="text-center py-12 animate-fade-in">
@@ -7,9 +9,20 @@ export default function Hero() {
         Everyone is welcome in our loving church family.
       </p>
       <div className="flex justify-center space-x-4">
-        <button className="bg-blue-600 text-white px-4 py-2 rounded">Join Us Sunday</button>
-        <button className="border border-gray-400 px-4 py-2 rounded">Prayer Request</button>
+        {/* Join Us Sunday → Services Page */}
+        <Link href="/services">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Join Us Sunday
+          </button>
+        </Link>
+
+        {/* Prayer Request → Prayer Page */}
+        <Link href="/prayer">
+          <button className="border border-gray-400 px-4 py-2 rounded hover:bg-gray-100">
+            Prayer Request
+          </button>
+        </Link>
       </div>
     </section>
-  )
+  );
 }

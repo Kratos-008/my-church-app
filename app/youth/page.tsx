@@ -112,7 +112,7 @@ export default function YouthPage() {
             Whether you’re interested in joining our youth group or helping with leadership, we’d love to connect with you!
           </p>
           <button className="bg-black text-white font-medium px-4 py-2 rounded hover:bg-gray-800">
-            Contact Our Youth Leader
+            Contact Our Youth Leaders
           </button>
         </div>
       </section>
