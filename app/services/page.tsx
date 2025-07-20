@@ -91,7 +91,8 @@ export default function ServicesPage() {
           We'd love to have you join our church family. Come as you are and experience God's love with us.
         </p>
         <div className="space-x-4">
-          <Link href="https://www.google.com/maps" target="_blank" className="bg-white text-blue-600 font-medium px-4 py-2 rounded hover:bg-gray-100">Get Directions</Link>
+          <Link href="https://www.google.com/maps/place/Masbate+GoodNews+Baptist+Church/@12.3728127,123.6366301,20z/data=!4m6!3m5!1s0x33a6db1e1cdc0bc7:0x9a1c49406749d8a3!8m2!3d12.372778!4d123.6366023!16s%2Fg%2F11j4sk_g0d?hl=en-US&entry=ttu&g_ep=EgoyMDI1MDcxNi4wIKXMDSoASAFQAw%3D%3D" 
+          target="_blank" className="bg-white text-blue-600 font-medium px-4 py-2 rounded hover:bg-gray-100">Get Directions</Link>
           <Link href="/" className="bg-white text-blue-600 font-medium px-4 py-2 rounded hover:bg-gray-100">Back to Home</Link>
         </div>
       </section>

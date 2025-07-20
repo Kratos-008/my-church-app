@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function ContactPage() {
@@ -105,13 +106,21 @@ export default function ContactPage() {
           <p><strong>Follow Us:</strong> Masbate Good News Baptist Church</p>
         </div>
 
-        {/* Prayer Request */}
-        <div className="bg-gray-50 border rounded-xl p-6 mb-10 shadow">
-          <h3 className="font-semibold mb-2">🙏 Need Prayer?</h3>
-          <p>If you need prayer support, we're here for you. Submit a prayer request or speak with one of our pastors.</p>
-          <button className="mt-4 w-full bg-gray-800 text-white py-2 rounded hover:bg-black">
+
+
+        <div className="bg-gray-50 border rounded-xl p-6 mb-6 shadow">
+          <h3 className="text-lg font-semibold mb-2">🙏 Need Prayer?</h3>
+          <p className="text-gray-600 mb-4">
+           If you need prayer support, we're here for you. Submit a prayer request or speak with one of our pastors.
+          </p>
+          <Link href="/prayer">
+          <button
+            type="submit"
+            className="mt-4 w-full bg-black shadow text-white py-2 rounded hover:bg-gray-800"
+          >
             Submit Prayer Request
           </button>
+        </Link>
         </div>
 
         {/* Map */}
@@ -119,7 +128,7 @@ export default function ContactPage() {
           <h3 className="text-xl font-bold mb-2 text-center">Find Us on the Map</h3>
           <div className="w-full h-[300px]">
             <iframe
-              src="https://www.google.com/maps?q=9JFP%2B4J9%2C+Nursery+Blvd%2C+Masbate+City%2C+Masbate&output=embed"
+              src="https://www.google.com/maps?q=9JFP%4J9%2C+Nursery+Blvd%2C+Masbate+City%2C+Masbate&output=embed"
               width="100%"
               height="100%"
               allowFullScreen

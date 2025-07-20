@@ -1,8 +1,8 @@
 {
   "/page": "app/page.js",
-  "/services/page": "app/services/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/contact/page": "app/contact/page.js",
+  "/events/page": "app/events/page.js",
   "/prayer/page": "app/prayer/page.js",
-  "/youth/page": "app/youth/page.js"
+  "/contact/page": "app/contact/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/services/page": "app/services/page.js"
 }
