@@ -130,10 +130,10 @@ export default function PrayerPage() {
           Don’t face your challenges alone. Share your prayer requests with our loving church family.
         </p>
         <div className="flex justify-center flex-wrap gap-4">
-          <Link href="/contact" className="bg-white text-black px-6 py-2 rounded font-medium hover:bg-gray-100 transition">
+          <Link href="/contact" className="bg-white text-black px-6 py-2 rounded-md hover:bg-gray-100 transition">
             Contact a Pastor
           </Link>
-          <Link href="/" className="bg-white text-black px-6 py-2 rounded font-medium hover:bg-gray-100 transition">
+          <Link href="/" className="bg-white text-black px-6 py-2 rounded-md hover:bg-gray-100 transition">
             Back to Home
           </Link>
         </div>

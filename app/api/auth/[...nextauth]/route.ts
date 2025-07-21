@@ -1,16 +1,38 @@
-import NextAuth from "next-auth"
+import NextAuth, { AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { compare } from "bcryptjs"
 import prisma from "@/lib/prisma"
 
+// Extend the session with custom properties
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      email: string
+      role: "ADMIN" | "USER"
+    }
+  }
+  interface User {
+    role: "ADMIN" | "USER"
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string
+    email: string
+    role: "ADMIN" | "USER"
+  }
+}
+
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: {
-    strategy: "jwt",
+    strategy: "jwt", // Use JWT instead of database sessions
   },
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/auth/signin", // Custom login page
   },
   providers: [
     CredentialsProvider({
@@ -33,8 +55,8 @@ const handler = NextAuth({
 
         return {
           id: user.id,
-          name: user.name,
           email: user.email,
+          name: user.name,
           role: user.role,
         }
       },
@@ -45,19 +67,20 @@ const handler = NextAuth({
       if (user) {
         token.id = user.id
         token.email = user.email
-        token.role = user.role
+        token.role = user.role as "ADMIN" | "USER"
       }
       return token
     },
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-        session.user.email = token.email as string
-        session.user.role = token.role as "ADMIN" | "USER"
+    async session({ session, token }) {
+      if (session.user && token) {
+        session.user.id = token.id
+        session.user.email = token.email
+        session.user.role = token.role
       }
       return session
     },
   },
-})
+  secret: process.env.NEXTAUTH_SECRET,
+} satisfies AuthOptions)
 
 export { handler as GET, handler as POST }
