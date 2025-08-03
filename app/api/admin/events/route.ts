@@ -1,22 +1,27 @@
+'use server'
+
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
+
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const events = await prisma.event.findMany({ orderBy: { date: 'asc' } })
+  const events = await prisma.event.findMany({
+    orderBy: { date: 'asc' },
+  })
+
   return NextResponse.json(events)
 }
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
+
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -31,8 +36,8 @@ export async function POST(req: Request) {
     data: {
       title,
       description,
-      date: new Date(date),
       location,
+      date: new Date(date),
     },
   })
 
@@ -41,6 +46,7 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   const session = await getServerSession(authOptions)
+
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }

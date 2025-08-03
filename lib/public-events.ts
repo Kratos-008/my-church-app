@@ -1,4 +1,6 @@
 // lib/public-events.ts
+'use server'
+
 export async function getAllEventsPublic() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/events`, {
     method: 'GET',

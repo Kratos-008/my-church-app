@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       name,
       email,
       password: hashedPassword,
-      role: 'USER', // Default role, you can make the first user 'ADMIN' if needed
+      role: 'USER',
     },
   })
 

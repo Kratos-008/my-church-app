@@ -1,6 +1,8 @@
 // DELETE event by 
+'use server'
+
+import {authOptions} from '@/lib/auth'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 export async function deleteEvent(id: string) {
   const session = await getServerSession(authOptions)
 
@@ -26,6 +28,7 @@ export async function updateEvent(id: string, data: {
   description?: string
   date?: string
   location?: string
+  time?: string 
 }) {
   const session = await getServerSession(authOptions)
 

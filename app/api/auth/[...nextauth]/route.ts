@@ -1,10 +1,10 @@
-import NextAuth, { AuthOptions } from "next-auth"
+import NextAuth, { type AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { compare } from "bcryptjs"
-import prisma from "@/lib/prisma"
+import { prisma } from "@/lib/prisma"
 
-// Extend the session with custom properties
+// Extend session and JWT types
 declare module "next-auth" {
   interface Session {
     user: {
@@ -13,6 +13,7 @@ declare module "next-auth" {
       role: "ADMIN" | "USER"
     }
   }
+
   interface User {
     role: "ADMIN" | "USER"
   }
@@ -26,13 +27,14 @@ declare module "next-auth/jwt" {
   }
 }
 
-const handler = NextAuth({
+// ✅ Auth config
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
-    strategy: "jwt", // Use JWT instead of database sessions
+    strategy: "jwt",
   },
   pages: {
-    signIn: "/auth/signin", // Custom login page
+    signIn: "/auth/signin",
   },
   providers: [
     CredentialsProvider({
@@ -42,22 +44,27 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        try {
+          if (!credentials?.email || !credentials?.password) return null
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        })
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          })
 
-        if (!user || !user.password) return null
+          if (!user || !user.password) return null
 
-        const isValid = await compare(credentials.password, user.password)
-        if (!isValid) return null
+          const isValid = await compare(credentials.password, user.password)
+          if (!isValid) return null
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          }
+        } catch (error) {
+          console.error("Auth error:", error)
+          return null
         }
       },
     }),
@@ -72,15 +79,20 @@ const handler = NextAuth({
       return token
     },
     async session({ session, token }) {
-      if (session.user && token) {
-        session.user.id = token.id
-        session.user.email = token.email
-        session.user.role = token.role
-      }
-      return session
-    },
+  console.log("Session callback -- token:", token)
+  if (session.user && token) {
+    session.user.id = token.id as string
+    session.user.email = token.email as string
+    session.user.role = token.role as "ADMIN" | "USER"
+  }
+  console.log("Session callback -- final session:", session)
+  return session
+},
   },
   secret: process.env.NEXTAUTH_SECRET,
-} satisfies AuthOptions)
+}
+
+// ✅ Export authOptions so you can use it in getServerSession(authOptions)
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

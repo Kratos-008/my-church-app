@@ -3,16 +3,15 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req })
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  console.log('SECRET:', process.env.NEXTAUTH_SECRET)
 
-  // Check if user is logged in
   if (!token) {
     return NextResponse.redirect(new URL('/auth/signin', req.url))
   }
 
-  // Check if trying to access admin routes
+  // Protect /admin routes with role check
   if (req.nextUrl.pathname.startsWith('/admin')) {
-    // Only allow ADMIN role
     if (token.role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/', req.url))
     }
@@ -22,5 +21,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'], // Protect all /admin routes
+  matcher: ['/admin/:path*'],
 }

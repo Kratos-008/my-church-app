@@ -1,20 +1,21 @@
-import { NextResponse } from 'next/server'
-import { PrismaClient, Role } from '@prisma/client'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+'use server'
 
-const prisma = new PrismaClient()
+import { NextResponse } from 'next/server'
+import { Role } from '@prisma/client'
+import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 
 export async function PATCH(req: Request) {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
+
   if (!session || session.user.role !== 'ADMIN') {
-    return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 })
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { id, role } = await req.json()
 
   if (!id || !role || !['ADMIN', 'USER'].includes(role)) {
-    return new NextResponse(JSON.stringify({ error: 'Invalid data' }), { status: 400 })
+    return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
   }
 
   const updated = await prisma.user.update({

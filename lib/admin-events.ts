@@ -1,71 +1,63 @@
 'use server'
 
-import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { getServerSession } from 'next-auth'
+import { prisma } from '@/lib/prisma'
 
-const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+type EventData = {
+  title: string
+  description: string
+  location: string
+  date: string
+  time: string
+}
+
+type EventUpdateData = EventData & {
+  id: string
+}
+
+async function requireAdminSession() {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== 'ADMIN') {
+    throw new Error('Unauthorized')
+  }
+  return session
+}
 
 export async function getAllEvents() {
-  const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN') throw new Error('Unauthorized')
-
-  const res = await fetch(`${baseUrl}/api/admin/events`, { cache: 'no-store' })
-  return res.json()
+  await requireAdminSession()
+  return await prisma.event.findMany({ orderBy: { date: 'desc' } })
 }
 
-export async function createEvent(data: {
-  title: string
-  description: string
-  location: string
-  date: string
-}) {
-  const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN') throw new Error('Unauthorized')
+export async function createEvent(data: EventData) {
+  await requireAdminSession()
 
-  const res = await fetch(`${baseUrl}/api/admin/events`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-    cache: 'no-store',
-  })
+  // Convert string date to Date object
+  const formatted = {
+    ...data,
+    date: new Date(data.date),
+  }
 
-  return res.json()
+  return await prisma.event.create({ data: formatted })
 }
 
-export async function editEvent(data: {
-  id: string
-  title: string
-  description: string
-  location: string
-  date: string
-}) {
-  const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN') throw new Error('Unauthorized')
+export async function updateEvent(data: EventUpdateData) {
+  await requireAdminSession()
 
-  const res = await fetch(`${baseUrl}/api/admin/events`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-    cache: 'no-store',
+  return await prisma.event.update({
+    where: { id: data.id },
+    data: {
+      title: data.title,
+      description: data.description,
+      location: data.location,
+      date: new Date(data.date),  // fix here too
+    },
   })
-
-  if (!res.ok) throw new Error('Failed to update event')
-
-  return res.json()
 }
 
 export async function deleteEvent(id: string) {
-  const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN') throw new Error('Unauthorized')
-
-  const res = await fetch(`${baseUrl}/api/admin/events/delete`, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id }),
-    cache: 'no-store',
+  await requireAdminSession()
+  return await prisma.event.delete({
+    where: { id },
   })
-
-  if (!res.ok) throw new Error('Failed to delete event')
-
-  return res.json()
 }

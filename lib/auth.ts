@@ -1,14 +1,18 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { AuthOptions, getServerSession } from 'next-auth'
 import bcrypt from 'bcryptjs'
+import type { AuthOptions, User } from 'next-auth'
+import type { AdapterUser } from 'next-auth/adapters'
 
 const prisma = new PrismaClient()
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -19,45 +23,43 @@ export const authOptions: AuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } })
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        })
+
         if (!user || !user.password) return null
 
         const isValid = await bcrypt.compare(credentials.password, user.password)
         if (!isValid) return null
 
-        return user
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        } as User
       },
     }),
   ],
   callbacks: {
-  async jwt({ token, user }) {
-    if (user) {
-      token.id = user.id
-      token.role = user.role
-    }
-    return token
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = (user as AdapterUser).id
+        token.role = (user as any).role
+        token.email = user.email
+      }
+      return token
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string
+        session.user.role = token.role as 'ADMIN' | 'USER'
+        session.user.email = token.email as string
+      }
+      return session
+    },
   },
-  async session({ session, token }) {
-    if (session.user) {
-      session.user.id = token.id as string
-      session.user.role = token.role as 'ADMIN' | 'USER'
-    }
-    return session
-  },
-},
   pages: {
     signIn: '/auth/signin',
   },
-}
-
-// ✅ Default export (for convenience)
-export default authOptions
-
-// ✅ Helper function to enforce ADMIN access
-export async function requireAdmin() {
-  const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN') {
-    throw new Error('Not authorized')
-  }
-  return session
 }

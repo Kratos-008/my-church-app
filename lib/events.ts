@@ -1,8 +1,8 @@
 // lib/events.ts or lib/actions/eventActions.ts
 'use server'
 
-import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { getServerSession } from 'next-auth'
 
 const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
 

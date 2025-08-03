@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { signIn } from "next-auth/react"
 import { useState } from "react"
@@ -25,7 +25,7 @@ export default function SignInForm() {
 
     if (res?.ok) {
       toast.success("Signed in successfully")
-      router.push("/admin") // ✅ redirect where you want
+      router.push("/admin")
     } else {
       toast.error("Invalid credentials. Please try again.")
     }

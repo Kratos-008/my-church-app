@@ -1,10 +1,13 @@
-// app/admin/page.tsx
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
-export default async function AdminDashboard() {
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const session = await getServerSession(authOptions)
 
   if (!session || session.user.role !== 'ADMIN') {
@@ -27,8 +30,7 @@ export default async function AdminDashboard() {
 
       {/* Main Content */}
       <main className="flex-1 p-10 bg-white">
-        <h1 className="text-2xl font-bold mb-4">Welcome, Admin!</h1>
-        <p className="text-gray-700">This is your admin dashboard where you can manage church content.</p>
+        {children}
       </main>
     </div>
   )
