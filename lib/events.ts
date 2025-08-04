@@ -4,7 +4,7 @@
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 
-const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+const baseUrl = process.env.NEXTAUTH_URL || 'https://mgnbc-six.vercel.app/'
 
 export async function getAllEvents() {
   const session = await getServerSession(authOptions)

@@ -1,8 +1,9 @@
-import NextAuth, { type AuthOptions } from "next-auth"
+import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { compare } from "bcryptjs"
 import { prisma } from "@/lib/prisma"
+import type { AuthOptions } from "next-auth"
 
 // Extend session and JWT types
 declare module "next-auth" {
@@ -28,7 +29,7 @@ declare module "next-auth/jwt" {
 }
 
 // ✅ Auth config
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
@@ -79,20 +80,18 @@ export const authOptions: AuthOptions = {
       return token
     },
     async session({ session, token }) {
-  console.log("Session callback -- token:", token)
-  if (session.user && token) {
-    session.user.id = token.id as string
-    session.user.email = token.email as string
-    session.user.role = token.role as "ADMIN" | "USER"
-  }
-  console.log("Session callback -- final session:", session)
-  return session
-},
+      if (session.user && token) {
+        session.user.id = token.id as string
+        session.user.email = token.email as string
+        session.user.role = token.role as "ADMIN" | "USER"
+      }
+      return session
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 }
 
-// ✅ Export authOptions so you can use it in getServerSession(authOptions)
+// ✅ Required Next.js API route export
 const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

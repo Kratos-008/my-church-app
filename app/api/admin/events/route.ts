@@ -26,9 +26,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { title, description, date, location } = await req.json()
+  const { title, description, date, time, location } = await req.json()
 
-  if (!title || !description || !date || !location) {
+  if (!title || !description || !date || !time || !location) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
@@ -37,6 +37,7 @@ export async function POST(req: Request) {
       title,
       description,
       location,
+      time,
       date: new Date(date),
     },
   })
@@ -51,9 +52,9 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { id, title, description, date, location } = await req.json()
+  const { id, title, description, date, time, location } = await req.json()
 
-  if (!id || !title || !description || !date || !location) {
+  if (!id || !title || !description || !date || !time || !location) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
@@ -63,6 +64,7 @@ export async function PATCH(req: Request) {
       title,
       description,
       location,
+      time,
       date: new Date(date),
     },
   })

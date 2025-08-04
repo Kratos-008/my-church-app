@@ -4,5 +4,5 @@ export type EventData = {
   description: string
   location: string
   date: string | Date
-  time?: string
+  time: string
 }
