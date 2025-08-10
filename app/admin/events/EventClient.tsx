@@ -101,23 +101,16 @@ export default function AdminEventClient({ events: initialEvents }: AdminEventCl
     setEditingId(event.id)
   }
 
-  // Add a manual logout button handler
+  // Logout handler
   const handleLogout = () => {
     signOut({ callbackUrl: '/login' })
   }
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manage Events</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          title="Logout"
-        >
-          Logout
-        </button>
-      </div>
+      {/* Removed top-right Logout button */}
+
+      <h1 className="text-2xl font-bold mb-6">Manage Events</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4 mb-10 max-w-xl">
         <input

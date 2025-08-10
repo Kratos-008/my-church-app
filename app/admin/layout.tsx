@@ -1,8 +1,8 @@
-// app/admin/layout.tsx
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import LogoutButton from '../components/LogoutButton' // ⬅ new import
 
 export default async function AdminLayout({
   children,
@@ -25,8 +25,15 @@ export default async function AdminLayout({
           <Link href="/admin/users" className="block hover:text-orange-400">Manage Users</Link>
           <Link href="/admin/events" className="block hover:text-orange-400">Manage Events</Link>
           <Link href="/admin/prayers" className="block hover:text-orange-400">Prayer Requests</Link>
-          <Link href="/" className="block text-sm text-gray-400 hover:text-gray-300 mt-10">← Back to Site</Link>
+          <Link href="/" className="block text-sm text-gray-400 hover:text-gray-300 mt-10">
+            ← Back to Site
+          </Link>
         </nav>
+
+        {/* Logout Button */}
+        <div className="mt-6">
+          <LogoutButton />
+        </div>
       </aside>
 
       {/* Main Content */}
