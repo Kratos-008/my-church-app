@@ -9,35 +9,40 @@ export default function UpcomingEvents() {
   const [events, setEvents] = useState<EventData[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-  async function fetchEvents() {
-    try {
-      const res = await fetch('/api/admin/events')
-      const data = await res.json()
-
-      const today = new Date()
-      today.setHours(0, 0, 0, 0) // 🔹 reset to midnight for proper compare
-
-      const upcoming = data.filter((event: EventData) => {
-        const eventDate = new Date(event.date)
-        eventDate.setHours(0, 0, 0, 0) // 🔹 normalize event date too
-        return eventDate >= today
-      })
-
-      setEvents(upcoming)
-    } catch (error) {
-      console.error('Failed to load events:', error)
-    } finally {
-      setLoading(false)
-    }
+  // Helper to parse event.date safely
+  const parseEventDate = (dateValue: string | Date) => {
+    const dateStr = typeof dateValue === 'string' ? dateValue : dateValue.toISOString().split('T')[0]
+    const [year, month, day] = dateStr.split('-').map(Number)
+    return new Date(year, month - 1, day) // local midnight
   }
 
-  fetchEvents()
-}, [])
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const res = await fetch('/api/admin/events')
+        const data: EventData[] = await res.json()
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0) // midnight reset
+
+        const upcoming = data
+          .filter((event) => parseEventDate(event.date) >= today)
+          .sort((a, b) => parseEventDate(a.date).getTime() - parseEventDate(b.date).getTime())
+
+        setEvents(upcoming)
+      } catch (error) {
+        console.error('Failed to load events:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchEvents()
+  }, [])
 
   return (
     <section className="py-6 animate-fade-in max-w-md mx-auto">
-      {/* Header and link */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-3 px-4">
         <h3 className="text-xl font-semibold">Upcoming Events</h3>
         <Link
@@ -58,7 +63,8 @@ export default function UpcomingEvents() {
       ) : (
         <div className="space-y-4 mt-4 px-4">
           {events.map((event) => {
-            const eventDate = new Date(event.date)
+            const eventDate = parseEventDate(event.date)
+
             const timeFormatted = event.time
               ? new Date(`1970-01-01T${event.time}`).toLocaleTimeString(undefined, {
                   hour: 'numeric',
