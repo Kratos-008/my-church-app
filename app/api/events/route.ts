@@ -42,8 +42,9 @@ export async function GET(req: NextRequest) {
     } else {
       // No month/year filter, just past/upcoming logic
       dateFilter = past
-        ? { lt: startOfToday }
-        : { gte: startOfToday };
+      ? { lt: startOfToday }
+      : { gt: new Date() }; // compare to exact current time, not midnight
+
     }
 
     // Base where clause
