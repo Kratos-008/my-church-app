@@ -18,7 +18,7 @@ export default function UpcomingEvents() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await fetch('/api/admin/events')
+        const res = await fetch('/api/events')
         const data: EventData[] = await res.json()
 
         const today = new Date()
