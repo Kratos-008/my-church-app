@@ -12,12 +12,17 @@ export default function UpcomingEvents() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await fetch('/api/admin/events')
+        // ✅ Ask API for upcoming events only
+        const res = await fetch('/api/admin/events?past=false&limit=3')
         const data = await res.json()
 
-        const upcoming = data.filter((event: EventData) => {
-          const today = new Date()
-          return new Date(event.date) >= today
+        const today = new Date()
+        today.setHours(0, 0, 0, 0) // ignore time when comparing
+
+        // ✅ Filter to make sure we only keep today or future
+        const upcoming = data.events.filter((event: EventData) => {
+          const eventDate = new Date(event.date)
+          return eventDate >= today
         })
 
         setEvents(upcoming)
@@ -53,7 +58,7 @@ export default function UpcomingEvents() {
         </div>
       ) : (
         <div className="space-y-4 mt-4 px-4">
-          {events.slice(0, 3).map((event) => {
+          {events.map((event) => {
             const eventDate = new Date(event.date)
             const timeFormatted = event.time
               ? new Date(`1970-01-01T${event.time}`).toLocaleTimeString(undefined, {
