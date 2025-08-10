@@ -13,22 +13,27 @@ type Event = {
   time: string
 }
 
-// Utility: Check if a date is in the current week
-function isThisWeek(dateStr: string): boolean {
+// Utility: Get event label (Today, Tomorrow, This Week)
+function getEventLabel(dateStr: string): string | null {
   const today = new Date()
   const eventDate = new Date(dateStr)
 
+  // Remove time portion for accurate comparison
+  today.setHours(0, 0, 0, 0)
+  eventDate.setHours(0, 0, 0, 0)
+
+  const diffDays = Math.round((eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+
+  if (diffDays === 0) return 'Today'
+  if (diffDays === 1) return 'Tomorrow'
+
+  // Check if event is within this week
   const startOfWeek = new Date(today)
   startOfWeek.setDate(today.getDate() - today.getDay()) // Sunday
-
   const endOfWeek = new Date(startOfWeek)
   endOfWeek.setDate(startOfWeek.getDate() + 6) // Saturday
 
-  // Normalize time to ignore hours/mins
-  startOfWeek.setHours(0, 0, 0, 0)
-  endOfWeek.setHours(23, 59, 59, 999)
-
-  return eventDate >= startOfWeek && eventDate <= endOfWeek
+  return eventDate >= startOfWeek && eventDate <= endOfWeek ? 'This Week' : null
 }
 
 export default function ChurchEventsPage() {
@@ -84,46 +89,49 @@ export default function ChurchEventsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map(event => (
-              <div
-                key={event.id}
-                className="bg-purple-50 border border-purple-200 rounded-xl p-6 shadow-sm hover:shadow-md transition"
-              >
-                <h3 className="text-lg font-bold text-gray-900 mb-1">{event.title}</h3>
+            {events.map(event => {
+              const label = getEventLabel(event.date)
+              return (
+                <div
+                  key={event.id}
+                  className="bg-purple-50 border border-purple-200 rounded-xl p-6 shadow-sm hover:shadow-md transition"
+                >
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">{event.title}</h3>
 
-                {isThisWeek(event.date) && (
-                  <span className="inline-block bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
-                    This Week
-                  </span>
-                )}
+                  {label && (
+                    <span className="inline-block bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+                      {label}
+                    </span>
+                  )}
 
-                <p className="text-sm text-gray-700 mb-4">{event.description}</p>
+                  <p className="text-sm text-gray-700 mb-4">{event.description}</p>
 
-                <div className="flex items-center text-sm text-gray-800 mb-2">
-                  <CalendarDays className="w-4 h-4 mr-2 text-purple-600" />
-                  {new Date(event.date).toLocaleDateString(undefined, {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
+                  <div className="flex items-center text-sm text-gray-800 mb-2">
+                    <CalendarDays className="w-4 h-4 mr-2 text-purple-600" />
+                    {new Date(event.date).toLocaleDateString(undefined, {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </div>
+
+                  <div className="flex items-center text-sm text-gray-800 mb-2">
+                    <Clock className="w-4 h-4 mr-2 text-purple-600" />
+                    {new Date(`1970-01-01T${event.time}`).toLocaleTimeString(undefined, {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true,
+                    })}
+                  </div>
+
+                  <div className="flex items-center text-sm text-gray-800">
+                    <MapPin className="w-4 h-4 mr-2 text-purple-600" />
+                    {event.location}
+                  </div>
                 </div>
-
-                <div className="flex items-center text-sm text-gray-800 mb-2">
-                  <Clock className="w-4 h-4 mr-2 text-purple-600" />
-                  {new Date(`1970-01-01T${event.time}`).toLocaleTimeString(undefined, {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true,
-                  })}
-                </div>
-
-                <div className="flex items-center text-sm text-gray-800">
-                  <MapPin className="w-4 h-4 mr-2 text-purple-600" />
-                  {event.location}
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
@@ -145,8 +153,8 @@ export default function ChurchEventsPage() {
           className="bg-white text-black font-semibold px-5 py-2.5 rounded-md hover:bg-gray-200 transition">
             Back to Home
           </Link>
-          </div>
-          </div>
-          </div>
-          )
-        }
+        </div>
+      </div>
+    </div>
+  )
+}
