@@ -9,29 +9,15 @@ export default function UpcomingEvents() {
   const [events, setEvents] = useState<EventData[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Local-safe date parser (no UTC conversion)
-  const parseEventDate = (dateValue: string | Date) => {
-    const dateObj = new Date(dateValue)
-    return new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()) // local midnight
-  }
-
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await fetch('/api/events')
-        const data: EventData[] = await res.json()
+        const res = await fetch('/api/events?limit=3')
+        if (!res.ok) throw new Error('Failed to fetch events')
 
-        const today = new Date()
-        today.setHours(0, 0, 0, 0) // local midnight
+        const { events } = await res.json() // ✅ get the actual array
 
-        const upcoming = data
-  .filter((event) => {
-    const eventDate = new Date(event.date)
-    return eventDate.getTime() >= Date.now() - 24 * 60 * 60 * 1000 // allow today and future
-  })
-  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-
-        setEvents(upcoming)
+        setEvents(events)
       } catch (error) {
         console.error('Failed to load events:', error)
       } finally {
@@ -65,8 +51,7 @@ export default function UpcomingEvents() {
       ) : (
         <div className="space-y-4 mt-4 px-4">
           {events.map((event) => {
-            const eventDate = parseEventDate(event.date)
-
+            const eventDate = new Date(event.date)
             const timeFormatted = event.time
               ? new Date(`1970-01-01T${event.time}`).toLocaleTimeString(undefined, {
                   hour: 'numeric',
