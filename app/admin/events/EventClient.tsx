@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createEvent, deleteEvent, updateEvent } from '@/lib/admin-events'
+import { signOut } from 'next-auth/react' // adjust this import if you use another auth method
 
 export interface EventData {
   id: string
@@ -16,6 +17,8 @@ interface AdminEventClientProps {
   events: EventData[]
 }
 
+const SESSION_TIMEOUT = 10 * 60 * 1000 // 10 minutes in milliseconds
+
 export default function AdminEventClient({ events: initialEvents }: AdminEventClientProps) {
   const [events, setEvents] = useState<EventData[]>([])
   const [title, setTitle] = useState('')
@@ -24,13 +27,35 @@ export default function AdminEventClient({ events: initialEvents }: AdminEventCl
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
+  const timer = useRef<NodeJS.Timeout | null>(null)
 
+  // Reset inactivity timer
+  const resetTimer = () => {
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = setTimeout(() => {
+      alert('Session timed out due to inactivity. Logging out...')
+      signOut({ callbackUrl: '/login' }) // redirect to login after logout
+    }, SESSION_TIMEOUT)
+  }
+
+  // Setup inactivity listeners
   useEffect(() => {
     const formatted = initialEvents.map((e) => ({
       ...e,
       date: typeof e.date === 'string' ? e.date : new Date(e.date).toISOString(),
     }))
     setEvents(formatted)
+
+    const eventsToListen = ['mousemove', 'keydown', 'mousedown', 'touchstart']
+
+    eventsToListen.forEach((event) => window.addEventListener(event, resetTimer))
+
+    resetTimer() // start the timer on mount
+
+    return () => {
+      if (timer.current) clearTimeout(timer.current)
+      eventsToListen.forEach((event) => window.removeEventListener(event, resetTimer))
+    }
   }, [initialEvents])
 
   const resetForm = () => {
@@ -76,9 +101,23 @@ export default function AdminEventClient({ events: initialEvents }: AdminEventCl
     setEditingId(event.id)
   }
 
+  // Add a manual logout button handler
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/login' })
+  }
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Manage Events</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Manage Events</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          title="Logout"
+        >
+          Logout
+        </button>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4 mb-10 max-w-xl">
         <input
