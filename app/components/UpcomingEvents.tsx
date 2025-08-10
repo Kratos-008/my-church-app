@@ -25,8 +25,11 @@ export default function UpcomingEvents() {
         today.setHours(0, 0, 0, 0) // local midnight
 
         const upcoming = data
-          .filter((event) => parseEventDate(event.date) >= today)
-          .sort((a, b) => parseEventDate(a.date).getTime() - parseEventDate(b.date).getTime())
+  .filter((event) => {
+    const eventDate = new Date(event.date)
+    return eventDate.getTime() >= Date.now() - 24 * 60 * 60 * 1000 // allow today and future
+  })
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
         setEvents(upcoming)
       } catch (error) {
