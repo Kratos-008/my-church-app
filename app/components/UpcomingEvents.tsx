@@ -12,7 +12,7 @@ export default function UpcomingEvents() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await fetch('/api/events?limit=3')
+        const res = await fetch('/api/events?limit=1')
         if (!res.ok) throw new Error('Failed to fetch events')
 
         const { events } = await res.json() // ✅ get the actual array
