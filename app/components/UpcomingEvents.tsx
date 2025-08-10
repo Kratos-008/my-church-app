@@ -9,11 +9,10 @@ export default function UpcomingEvents() {
   const [events, setEvents] = useState<EventData[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Helper to parse event.date safely
+  // Local-safe date parser (no UTC conversion)
   const parseEventDate = (dateValue: string | Date) => {
-    const dateStr = typeof dateValue === 'string' ? dateValue : dateValue.toISOString().split('T')[0]
-    const [year, month, day] = dateStr.split('-').map(Number)
-    return new Date(year, month - 1, day) // local midnight
+    const dateObj = new Date(dateValue)
+    return new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()) // local midnight
   }
 
   useEffect(() => {
@@ -23,7 +22,7 @@ export default function UpcomingEvents() {
         const data: EventData[] = await res.json()
 
         const today = new Date()
-        today.setHours(0, 0, 0, 0) // midnight reset
+        today.setHours(0, 0, 0, 0) // local midnight
 
         const upcoming = data
           .filter((event) => parseEventDate(event.date) >= today)
