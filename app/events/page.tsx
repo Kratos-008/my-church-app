@@ -42,16 +42,17 @@ export default function ChurchEventsPage() {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      try {
-        const res = await fetch('/api/events')
-        const data = await res.json()
-        setEvents(data)
-      } catch (err) {
-        console.error('Failed to fetch events:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
+  try {
+    const res = await fetch('/api/events')
+    const data = await res.json()
+    setEvents(data.events) // ✅ Use the array inside the object
+  } catch (err) {
+    console.error('Failed to fetch events:', err)
+  } finally {
+    setLoading(false)
+  }
+}
+
 
     fetchEvents()
   }, [])
