@@ -43,9 +43,9 @@ export default function ChurchEventsPage() {
   useEffect(() => {
     const fetchEvents = async () => {
   try {
-    const res = await fetch('/api/events')
+    const res = await fetch('/api/events?past=false');
     const data = await res.json()
-    setEvents(data.events) // ✅ Use the array inside the object
+    setEvents(Array.isArray(data.events) ? data.events : [])
   } catch (err) {
     console.error('Failed to fetch events:', err)
   } finally {
