@@ -10,31 +10,30 @@ export default function UpcomingEvents() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function fetchEvents() {
-      try {
-        // ✅ Ask API for upcoming events only
-        const res = await fetch('/api/admin/events?past=false&limit=3')
-        const data = await res.json()
+  async function fetchEvents() {
+    try {
+      const res = await fetch('/api/admin/events')
+      const data = await res.json()
 
-        const today = new Date()
-        today.setHours(0, 0, 0, 0) // ignore time when comparing
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // 🔹 reset to midnight for proper compare
 
-        // ✅ Filter to make sure we only keep today or future
-        const upcoming = data.events.filter((event: EventData) => {
-          const eventDate = new Date(event.date)
-          return eventDate >= today
-        })
+      const upcoming = data.filter((event: EventData) => {
+        const eventDate = new Date(event.date)
+        eventDate.setHours(0, 0, 0, 0) // 🔹 normalize event date too
+        return eventDate >= today
+      })
 
-        setEvents(upcoming)
-      } catch (error) {
-        console.error('Failed to load events:', error)
-      } finally {
-        setLoading(false)
-      }
+      setEvents(upcoming)
+    } catch (error) {
+      console.error('Failed to load events:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
-    fetchEvents()
-  }, [])
+  fetchEvents()
+}, [])
 
   return (
     <section className="py-6 animate-fade-in max-w-md mx-auto">
