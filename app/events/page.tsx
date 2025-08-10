@@ -43,7 +43,7 @@ export default function ChurchEventsPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await fetch('/api/admin/events')
+        const res = await fetch('/api/events')
         const data = await res.json()
         setEvents(data)
       } catch (err) {
