@@ -91,18 +91,21 @@ export default function ContactPage() {
         <div className="bg-gray-50 border rounded-xl p-6 mb-6 shadow">
           <h3 className="font-semibold mb-2 flex items-center gap-2">
             <Phone className="w-5 h-5 text-green-500" /> Contact Information
-          </h3>
-          <p className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-gray-500" /> +63 (56) 333-1234
-          </p>
-          <p className="flex items-center gap-2">
-            <Mail className="w-4 h-4 text-gray-500" /> info@masbategoodnewsbaptist.com
-          </p>
-          <p className="flex items-center gap-2">
-            <FaFacebookF className="w-4 h-4 text-blue-600" /> Masbate Good News Baptist Church
-          </p>
-        </div>
-
+            </h3>
+            <p className="flex items-center gap-2">
+              <Phone className="w-4 h-4 text-gray-500" /> +63 (56) 333-1234</p>
+              <p className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-gray-500" /> info@masbategoodnewsbaptist.com</p>
+                <a
+                href="https://www.facebook.com/goodnewsbc" // change to your exact FB URL
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-blue-600 hover:underline"
+                >
+                  <FaFacebookF className="w-4 h-4" />
+                  Masbate Good News Baptist Church
+                  </a>
+                  </div>
         {/* Need Prayer */}
         <div className="bg-gray-50 border rounded-xl p-6 mb-6 shadow">
           <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
