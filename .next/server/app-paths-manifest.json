@@ -1,6 +1,10 @@
 {
   "/page": "app/page.js",
   "/api/events/route": "app/api/events/route.js",
+  "/events/page": "app/events/page.js",
+  "/contact/page": "app/contact/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/events/page": "app/events/page.js"
+  "/services/page": "app/services/page.js",
+  "/youth/page": "app/youth/page.js",
+  "/admin/prayers/page": "app/admin/prayers/page.js"
 }
