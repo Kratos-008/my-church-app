@@ -24,11 +24,25 @@ export default function SignInForm() {
 
     setLoading(false)
 
-    if (res?.ok) {
-      toast.success("Signed in successfully")
-      router.push("/admin")
-    } else {
+    if (!res || res.error) {
       toast.error("Invalid credentials. Please try again.")
+      return
+    }
+
+    try {
+      // fetch session after login
+      const sessionRes = await fetch("/api/auth/session")
+      const session = await sessionRes.json()
+
+      if (session?.user?.role === "ADMIN") {
+        toast.success("Welcome Admin!")
+        router.push("/admin")
+      } else {
+        toast.success("Signed in successfully")
+        router.push("/") // regular users just go home
+      }
+    } catch (error) {
+      toast.error("Something went wrong while fetching session.")
     }
   }
 

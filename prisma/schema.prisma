@@ -56,12 +56,13 @@ model Event {
 }
 
 model PrayerRequest {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  message   String
+  id        String   @id @default(cuid())
+  name      String?
+  request   String
+  anonymous Boolean  @default(false)
+  approved  Boolean  @default(false)
+  answered  Boolean  @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 enum Role {
