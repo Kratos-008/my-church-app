@@ -1,8 +1,8 @@
-// File: C:\Ivan\masbate_church_fullsite\masbate_church_fullsite\app\prayer\page.tsx
-import * as entry from '../../../../app/prayer/page.js'
+// File: C:\Ivan\masbate_church_fullsite\masbate_church_fullsite\app\admin\users\page.tsx
+import * as entry from '../../../../../app/admin/users/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../app/prayer/page.js')
+type TEntry = typeof import('../../../../../app/admin/users/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{
