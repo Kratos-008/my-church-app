@@ -4,6 +4,7 @@ import { getAllEvents } from '@/lib/admin-events'
 import AdminEventClient from './EventClient'
 import { getServerSession } from 'next-auth'
 
+export const dynamic = "force-dynamic";
 
 export default async function AdminEventsPage() {
   const session = await getServerSession(authOptions)
