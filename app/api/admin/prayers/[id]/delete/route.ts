@@ -4,10 +4,10 @@ import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authOptions } from '@/lib/auth'
 
+export const dynamic = "force-dynamic"; // ✅ ensures runtime execution
+
 type Params = {
-  params: {
-    id: string
-  }
+  params: { id: string }
 }
 
 // ✅ POST: delete a prayer request

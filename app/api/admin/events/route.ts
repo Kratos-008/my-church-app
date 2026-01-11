@@ -2,7 +2,10 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import {prisma} from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
+
+// Ensure dynamic server execution for deployment
+export const dynamic = "force-dynamic";
 
 // ✅ GET - List all events (Admin only)
 export async function GET() {
